@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 @Entity // Informa para o JPA que Country é uma classe do banco de dados.
 @Table(name = "paises")
@@ -16,8 +18,12 @@ public class Country implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @NotBlank
+    @Length(min = 4, max = 50, message = "O nome deve conter no mínimo 4 e no máximo 50 caracteres")
     @Column(name = "nome", nullable = false, length = 50)
     private String name;
+    @NotBlank
+    @Length(min = 3, max = 3, message = "A iso deve conter 3 caracteres")
     @Column(name = "iso", nullable = false, length = 3)
     private String iso;
 
