@@ -2,18 +2,21 @@ package br.com.dominio.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-@Entity // Informa para o JPA que Country é uma classe do banco de dados.
-@Table(name = "paises")
-public class Country implements Serializable {
+@Entity
+@Table(name = "estados")
+public class State implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,17 +26,22 @@ public class Country implements Serializable {
     @Column(name = "nome", nullable = false, length = 50)
     private String name;
     @NotBlank
-    @Length(min = 3, max = 3, message = "A iso deve conter 3 caracteres")
-    @Column(name = "iso", nullable = false, length = 3)
-    private String iso;
+    @Length(min = 2, max = 2, message = "O nome deve conter 2 caracteres")
+    @Column(name = "uf", nullable = false, length = 2)
+    private String uf;
+    @NotNull(message = "Por favor informe o país")
+    @ManyToOne
+    @JoinColumn(name = "pais", referencedColumnName = "id", nullable = false)
+    private Country country;
 
-    public Country() {
+    public State() {
     }
 
-    public Country(Integer id, String name, String iso) {
+    public State(Integer id, String name, String uf, Country country) {
         this.id = id;
         this.name = name;
-        this.iso = iso;
+        this.uf = uf;
+        this.country = country;
     }
 
     public Integer getId() {
@@ -52,18 +60,26 @@ public class Country implements Serializable {
         this.name = name;
     }
 
-    public String getIso() {
-        return iso;
+    public String getUf() {
+        return uf;
     }
 
-    public void setIso(String iso) {
-        this.iso = iso;
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    public Country getCountry() {
+        return country;
+    }
+
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.id);
         return hash;
     }
 
@@ -78,10 +94,11 @@ public class Country implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Country other = (Country) obj;
+        final State other = (State) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
     }
+
 }
